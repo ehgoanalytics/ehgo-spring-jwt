@@ -1,7 +1,4 @@
-BSD-2-Clause Plus Patent License
-
-BSD-2-Clause-Patent
-
+/*
 Copyright (c) 2019 EHGO Analytics LLC
 
 Redistribution and use in source and binary forms, with or
@@ -10,7 +7,6 @@ conditions are met:
 
 1. Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above
 copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided
@@ -30,7 +26,6 @@ infringed by:
 (a) their Contribution(s) (the licensed copyrights of copyright
 holders and non-copyrightable additions of contributors, in
 source or binary form alone); or
-
 (b) combination of their Contribution(s) with the work of
 authorship to which such Contribution(s) was added by such
 copyright holder or contributor, if, at the time the Contribution
@@ -56,3 +51,68 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ehgo.spring.service;
+
+import java.util.List;
+
+import com.ehgo.spring.model.User;
+import com.ehgo.spring.model.UserDto;
+
+/**
+ * Interface for Member service implemention.
+ */
+public interface UserService {
+
+	/**
+	 * Save the member data.
+	 * 
+	 * @param user Member data in DTO.
+	 * @return Member object.
+	 */
+    User save(final UserDto user);
+
+    /**
+     * Final all members.
+     * 
+     * @return List of members.
+     */
+    List<User> findAll();
+
+    /**
+     * Delete member by id.
+     * 
+     * @param id Member id.
+     */
+    void delete(final String id);
+
+    /**
+     * Delete all members.
+     */
+    void delete();
+
+    /**
+     * Find member by username.
+     * 
+     * @param username Member username.
+     * @return Member or null.
+     */
+    User findOne(final String username);
+
+    /**
+     * Find member by id.
+     * 
+     * @param id Member id.
+     * @return Member or null.
+     */
+    User findById(final String id);
+
+    /**
+     * Update Member data from DTO.
+     * 
+     * @param who Member DTO.
+     * @return Member DTO.
+     */
+    UserDto update(final UserDto who);
+    
+}

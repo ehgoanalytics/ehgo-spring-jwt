@@ -1,7 +1,4 @@
-BSD-2-Clause Plus Patent License
-
-BSD-2-Clause-Patent
-
+/*
 Copyright (c) 2019 EHGO Analytics LLC
 
 Redistribution and use in source and binary forms, with or
@@ -10,7 +7,6 @@ conditions are met:
 
 1. Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above
 copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided
@@ -30,7 +26,6 @@ infringed by:
 (a) their Contribution(s) (the licensed copyrights of copyright
 holders and non-copyrightable additions of contributors, in
 source or binary form alone); or
-
 (b) combination of their Contribution(s) with the work of
 authorship to which such Contribution(s) was added by such
 copyright holder or contributor, if, at the time the Contribution
@@ -56,3 +51,66 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ehgo.spring.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+
+import com.ehgo.spring.model.AppResponse;
+import com.ehgo.spring.model.User;
+import com.ehgo.spring.model.UserDto;
+import com.ehgo.spring.service.UserService;
+
+/**
+ * Rest controller unsecured endpoints.
+ */
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping(value = "/")
+public class HomeController {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+
+    /**
+     * Member service.
+     */
+	@Autowired
+    private UserService userService;
+
+	/**
+	 * Home page.
+	 * @return Response entity with status 200.
+	 */
+	@GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AppResponse> getHome() {
+		// TODO: Remove this!
+    	User user = this.userService.findOne("admin");
+    	if (null == user) {
+			UserDto who = new UserDto();
+			who.setUsername("admin");
+			who.setPassword("admin");
+			who.setRoles(Collections.singletonList("ROLE_ADMIN"));
+			who.setAllowed(true);
+			this.userService.save(who);
+			LOGGER.warn("Created default user admin with password admin");
+    	}
+		final String message = String.format("Home page");
+		final AppResponse body = new AppResponse(message, null);
+		return new ResponseEntity<AppResponse>(body, HttpStatus.OK);
+    }
+
+}

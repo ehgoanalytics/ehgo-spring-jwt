@@ -1,7 +1,4 @@
-BSD-2-Clause Plus Patent License
-
-BSD-2-Clause-Patent
-
+/*
 Copyright (c) 2019 EHGO Analytics LLC
 
 Redistribution and use in source and binary forms, with or
@@ -10,7 +7,6 @@ conditions are met:
 
 1. Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above
 copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided
@@ -30,7 +26,6 @@ infringed by:
 (a) their Contribution(s) (the licensed copyrights of copyright
 holders and non-copyrightable additions of contributors, in
 source or binary form alone); or
-
 (b) combination of their Contribution(s) with the work of
 authorship to which such Contribution(s) was added by such
 copyright holder or contributor, if, at the time the Contribution
@@ -56,3 +51,107 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ehgo.spring.model;
+
+/**
+ * Class to contain all constants.
+ */
+public final class Constants {
+
+	/**
+	 * String character set.
+	 */
+	public static final String CHARSET = "UTF-8";
+
+	/**
+	 * Logged in service.
+	 */
+	public static final String LOGGEDIN_SERVICE = "loggedInService";
+
+	/**
+	 * User details service.
+	 */
+	public static final String USER_DETAILS_SERVICE = "userService";
+
+	/**
+	 * Access token TTL in minutes.
+	 */
+	public static final int ACCESS_TOKEN_VALIDITY_MINUTES = 5;
+
+	/**
+	 * Refresh token TTL in minutes.
+	 */
+	public static final int REFRESH_TOKEN_VALIDITY_MINUTES = 60;
+
+	/**
+	 * JWT signing key phrase.
+	 */
+	public static final String SIGNING_KEY_PHRASE = "Make this signing key at least 32 bytes (256 bits) long.";
+
+	/**
+	 * Authentication HTTP header.
+	 */
+	public static final String AUTH_HEADER = "Authorization";
+
+	/**
+	 * Authentication prefix.
+	 */
+	public static final String AUTH_PREFIX = "Bearer ";
+
+	/**
+	 * JWT issuer.
+	 */
+	public static final String TOKEN_ISSUER = "http://ehgoanalytics.com";
+
+	/**
+	 * Token attribute name when placed in HTTP request.
+	 */
+	public static final String ATTRIBUTE_TOKEN = "com.ehgo.web.spring.jwttoken";
+
+	/**
+	 * Refresh key in JWT claim.
+	 */
+	public static final String REFRESH_CLAIM = "refresh";
+
+	/**
+	 * Roles key in JWT claim.
+	 */
+	public static final String ROLES_CLAIM = "authorizations";
+
+	/**
+	 * Fingerprint message digest algorithm.
+	 */
+	public static final String FINGERPRINT_ALGORITHM = "SHA-256";
+
+	/**
+	 * Client fingerprint key in JWT claim.
+	 */
+	public static final String FINGERPRINT_CLAIM = "fingerprint";
+	
+	/**
+	 * Fingerprint cookie domain.
+	 */
+	public static final String FINGERPRINT_DOMAIN = "localhost";
+
+	/**
+	 * Fingerprint cookie name.
+	 */
+	public static final String FINGERPRINT_NAME = "Secure-Fingerprint";
+
+	/**
+	 * Fingerprint cookie path.
+	 */
+	public static final String FINGERPRINT_PATH = "/";
+
+	/**
+	 * Password for token encryption.
+	 */
+	public static final String ENCRYPTION_PASSWORD = "changeme";
+
+	/**
+	 * Salt for token encryption.
+	 */
+	public static final String ENCRYPTION_SALT = "changeme";
+
+}

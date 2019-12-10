@@ -1,7 +1,4 @@
-BSD-2-Clause Plus Patent License
-
-BSD-2-Clause-Patent
-
+/*
 Copyright (c) 2019 EHGO Analytics LLC
 
 Redistribution and use in source and binary forms, with or
@@ -10,7 +7,6 @@ conditions are met:
 
 1. Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above
 copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided
@@ -30,7 +26,6 @@ infringed by:
 (a) their Contribution(s) (the licensed copyrights of copyright
 holders and non-copyrightable additions of contributors, in
 source or binary form alone); or
-
 (b) combination of their Contribution(s) with the work of
 authorship to which such Contribution(s) was added by such
 copyright holder or contributor, if, at the time the Contribution
@@ -56,3 +51,71 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ehgo.spring.security;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import com.ehgo.spring.model.Constants;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+/**
+ * Authentication entry point used to handle authentication exceptions.
+ */
+@Component
+public final class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
+
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException authException) throws IOException {
+		// Failed attempt to access a secure endpoint. Try to figure out why.
+		final String header = request.getHeader(Constants.AUTH_HEADER);
+		String message = "Speechless";
+		int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+		if (null == header) {
+			message = "Missing Authorization Header";
+			code = HttpStatus.UNAUTHORIZED.value();
+		} else if (InsufficientAuthenticationException.class.isAssignableFrom(authException.getClass())) {
+			message = "Signature verification failed";
+			code = HttpStatus.UNPROCESSABLE_ENTITY.value();
+		} else {
+			LOGGER.error(String.format("%s %s", code, message));
+		}
+		sendError(response, message, code);
+	}
+
+	/**
+	 * Send a simple JSON error message.
+	 *
+	 * @param res     HttpServletResponse.
+	 * @param message Message to send.
+	 * @param code    HTTP status code of error.
+	 * @throws IOException If a problem occurs writing to the response.
+	 */
+	private void sendError(final HttpServletResponse response, final String message, final int code)
+			throws IOException {
+		final String body = String.format("{\"message\": \"%s\", \"content\": null}", message);
+		response.setStatus(code);
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setCharacterEncoding(Constants.CHARSET);
+		response.getWriter().write(body);
+		response.getWriter().flush();
+	}
+
+}

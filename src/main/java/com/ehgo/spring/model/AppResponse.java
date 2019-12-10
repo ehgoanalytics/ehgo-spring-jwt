@@ -1,7 +1,4 @@
-BSD-2-Clause Plus Patent License
-
-BSD-2-Clause-Patent
-
+/*
 Copyright (c) 2019 EHGO Analytics LLC
 
 Redistribution and use in source and binary forms, with or
@@ -10,7 +7,6 @@ conditions are met:
 
 1. Redistributions of source code must retain the above copyright
 notice, this list of conditions and the following disclaimer.
-
 2. Redistributions in binary form must reproduce the above
 copyright notice, this list of conditions and the following
 disclaimer in the documentation and/or other materials provided
@@ -30,7 +26,6 @@ infringed by:
 (a) their Contribution(s) (the licensed copyrights of copyright
 holders and non-copyrightable additions of contributors, in
 source or binary form alone); or
-
 (b) combination of their Contribution(s) with the work of
 authorship to which such Contribution(s) was added by such
 copyright holder or contributor, if, at the time the Contribution
@@ -56,3 +51,69 @@ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ehgo.spring.model;
+
+/**
+ * Response object for all HTTP requests.
+ */
+public final class AppResponse {
+
+	/**
+	 * Response message.
+	 */
+	private String message;
+
+	/**
+	 * Response content.
+	 */
+    private Object content;
+
+    /**
+     * No argument constructor.
+     */
+    public AppResponse() {}
+
+    /**
+     * Constructor.
+     * @param message Response message.
+     * @param content Response content.
+     */
+    public AppResponse(final String message, final Object content) {
+        this.message = message;
+        this.content = content;
+    }
+
+    /**
+     * Get response message.
+     * @return Response message.
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Set response message.
+     * @param message Response message.
+     */
+    public void setMessage(final String message) {
+        this.message = message;
+    }
+
+    /**
+     * Get response content.
+     * @return Response content.
+     */
+    public Object getcontent() {
+        return this.content;
+    }
+
+    /**
+     * Set response content.
+     * @param content Response content.
+     */
+    public void setResult(final Object content) {
+        this.content = content;
+    }
+
+}

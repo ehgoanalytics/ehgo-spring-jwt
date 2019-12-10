@@ -1,0 +1,2492 @@
+{
+	"info": {
+		"_postman_id": "fa5540cc-4eae-4691-83d5-65bb0bfc36a4",
+		"name": "Spring JWT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "home",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0d8ce29a-da17-45fc-91a8-10c4136f40dd",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set(\"admin_fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"admin_access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"admin_refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as admin');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "join",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd518bd3-2386-4c77-b782-c472cace5319",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set('fingerprint', fingerprint);\r",
+							"pm.globals.set('access_token', response.content.accessToken);\r",
+							"pm.globals.set('refresh_token', response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/join",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "join with existing username",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd518bd3-2386-4c77-b782-c472cace5319",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test response message\", function () {\r",
+							"    pm.expect(response.message).to.eql('User test already exists');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/join",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login bad user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('User bad does not exist');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bad\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login bad password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Bad credentials');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"bad\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set(\"fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users no auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"pm.variables.get(\"variable_key\");\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Missing Authorization Header');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users bad auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"pm.variables.get(\"variable_key\");\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Failed to parse authorization token');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzEzNDAzNjQsIm5iZiI6MTU3MTM0MDM2NCwianRpIjoiMmQ3MmI2NTQtZTU1Ny00ZjQzLTllNGEtYjI4NjdiMzc2NDUzIiwiZXhwIjoxNTcxMzQxMjY0LCJpZGVudGl0eSI6InRlc3QiLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.mFwlsF55IK4q1HME67LKs6u2XEBcSbbqesh4gRw5bad"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users bearer missing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Missing bearer token');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer  "
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users expired auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Token expired');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer GJ/86ONTOSiywPwZj2ZxSFy3l+8wYd9XiwcIFFqW4MhHNrvPVjSMIFSU1I06LtXBi/J0QLcbHCgFA8xlgCwV/CRWMqWGKJbMTZNSKmu2fCa8j36x56zetrv7fV31xE4KBTFX9subdb8dzOMIbrxx2a7jU2/h0hXUy31XVEzdQl5uOFIleOTkiT4vbcO3KbnoqCg0HckYSCJFaCvhWLMEXOKFRQRaL5C4x03jC/67Tbb4oLMuBp5HWJEhigdFkrKV28JH2N8hcB7oOuccMoaLQEVdbe0Qxy4Ge28xqzxZ75qtxs35c7hFKMm10mHtVr6sKasbuxE3haVOLhXu4UAMztgbDrVYkEFjOpN3E5vMrZ2k7V6bfmf3Y11S+YdzvS6SUuVWcmz7/olr/r7JhKS5XzXO5Ca8uW6aN2dLqHGBku3FojSMQiZ13W6USkwYRu7KULLpeT1uvV3OXeTN+cew+pFOFJn10irr+rkkVS+8ZjZj1r0NOgIehKc1TVlW9+CoqhYCrXh3kv6MFiYytw=="
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh expired",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Token expired');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer Uzdq7Uwdf9PFWbzxOtzROjc4yOMvfcl6uTsm/hXg2xb1hTxmYk/BrUsWk/Arck7B08AVNtErB5iBGKuNhbscxviwypflVuZAYx8iZJ0lgW1jnylaeToZV7HVNR5GUlSm/+AGHeTVXLesY2+KvKN1mLuUkE4lYLzBbWzT7QQ/jWYWK0VPo3MrvkQZxtUi2trVnXQetQmmx0xTKBVGpvzDV90PouoNkWPHQZddH+4oJ7QhUb9aLqLcrS0ItmiigHoUmRdTqTY3u4IMmzZ/hmTJPYXGPT61c9NpeARLVKxG/MCHcuUj4/s3ZHya9TFd4zhkNK6LAXGY2Z0fZHa0qLb+RLuheUja69x57yyp+pQtPzzi5zgmAJzycCrpXIVFeg/jEk3vtKXMruyVzgqYsW3wmXgVS4qtRU0yaSgZgqAr0Sd1uBwKbaqhxGC1HiWdEBp9e72L7uaP4lobkEcjvNQueIGARTD7Ij75InA55iB71+ebfypGjhqOdGO9CV+5RWUD3CReKCVbakunu9bVLJmKaKwMFCaAwE9f5nUeAMsynJIP"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test number of users\", function () {\r",
+							"    // admin and test\r",
+							"    pm.expect(response.content.length).to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test username\", function () {\r",
+							"    user = response.content[1];\r",
+							"    pm.expect(user.username).to.eql('test');\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"test_id\", response.content[1].id.toString());\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{fingerprint}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id bad",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Bad member id');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/5ddae8facccbf6158579eXYZ",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"5ddae8facccbf6158579eXYZ"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test username\", function () {\r",
+							"    pm.expect(response.content.username).to.eql('test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test id\", function () {\r",
+							"    let id = pm.globals.get('test_id');\r",
+							"    pm.expect(response.content.id).to.eql(id);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test roles count\", function () {\r",
+							"    pm.expect(response.content.roles.length).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test roles\", function () {\r",
+							"    pm.expect(response.content.roles[0]).to.eql('ROLE_MEMBER');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/{{test_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"{{test_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id update with bad id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Different request id and member id');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"id\": \"5ddae8facccbf6158579eXYZ\",\r\n    \"username\": \"test\",\r\n    \"password\": \"changed\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/{{test_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"{{test_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id update password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test username\", function () {\r",
+							"    pm.expect(response.content.password).to.eql('changed');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"changed\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/{{test_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"{{test_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id bad unjoin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Operation not permitted on other members');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/5ddae8facccbf6158579eXYZ",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"5ddae8facccbf6158579eXYZ"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users id unjoin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Member logged out and deleted');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/{{test_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"{{test_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "join again",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd518bd3-2386-4c77-b782-c472cace5319",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set('fingerprint', fingerprint);\r",
+							"pm.globals.set('access_token', response.content.accessToken);\r",
+							"pm.globals.set('refresh_token', response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/join",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh unexpired and invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.globals.set(\"access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.eq(undefined);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.eq(undefined);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{refresh_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{fingerprint}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users after refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"pm.test(\"Test number of users\", function () {\r",
+							"    pm.expect(response.users.length).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test username\", function () {\r",
+							"    user = response.users[0];\r",
+							"    pm.expect(user.username).to.eql('test');\r",
+							"});\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{fingerprint}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users with role MEMBER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Forbidden');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout from GET /auth/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 405\", function () {\r",
+							"    pm.response.to.have.status(405);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Request method \\'GET\\' not supported');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/access/bad/test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Unrecognized access bad');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/access/bad/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"access",
+						"bad",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/access/deny/test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('User test account access set to deny');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/access/deny/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"access",
+						"deny",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users after deny",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test('Has status code 401', function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test('Test message value', function () {\r",
+							"    pm.expect(response.message).to.eql('Not logged in');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login after deny",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Account locked for test');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/access/allow/test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('User test account access set to allow');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/access/allow/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"access",
+						"allow",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login after allow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set(\"fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "auth/access/revoke/test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Tokens revoked for user test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/access/revoke/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"access",
+						"revoke",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users after revoke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test('Has status code 401', function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test('Test message value', function () {\r",
+							"    pm.expect(response.message).to.eql('Not logged in');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login after revoke",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set(\"fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged out: test');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users after logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "13808036-1bf7-4a1c-bc99-f12d311c7dc2",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Not logged in');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh after logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Not logged in');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{refresh_token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login to create invalid refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"var refresh_invalid = pm.globals.get('refresh_token');\r",
+							"\r",
+							"pm.globals.set('refresh_invalid', refresh_invalid);\r",
+							"pm.globals.set(\"fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as test');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh with unexpired and invalid token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).eq('Invalid bearer token');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{refresh_invalid}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.globals.set(\"admin_access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"admin_refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.eq(undefined);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.eq(undefined);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_refresh_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged out: admin');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login admin after logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c3c6e5cc-b30b-4564-a7c3-b726eb373466",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"var fingerprint = pm.response.headers.get('Set-Cookie');\r",
+							"\r",
+							"pm.globals.set(\"admin_fingerprint\", fingerprint);\r",
+							"pm.globals.set(\"admin_access_token\", response.content.accessToken);\r",
+							"pm.globals.set(\"admin_refresh_token\", response.content.refreshToken);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Logged in as admin');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has fingerprint cookie\", function () {\r",
+							"    pm.expect(fingerprint).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has access token\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has refresh token\", function () {\r",
+							"    pm.expect(response.content.refreshToken).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Has different access and refresh tokens\", function () {\r",
+							"    pm.expect(response.content.accessToken).not.equal(response.content.refreshToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:5000/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users by admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60f0e98a-1934-4a87-a300-b0ec8a90c01d",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message value\", function () {\r",
+							"    pm.expect(response.message).to.eql('Forbidden');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{admin_access_token}}"
+					},
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{admin_fingerprint}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3095ce4-3001-4049-b58e-7736dd5723a0",
+						"exec": [
+							"var response = JSON.parse(responseBody);\r",
+							"\r",
+							"pm.test(\"Has status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test message\", function () {\r",
+							"    pm.expect(response.message).to.eql('All users deleted');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test content\", function () {\r",
+							"    pm.expect(response.content).to.eql(null);\r",
+							"});\r",
+							"\r",
+							"pm.globals.set(\"fingerprint\", undefined);\r",
+							"pm.globals.set(\"access_token\", undefined);\r",
+							"pm.globals.set(\"refresh_token\", undefined);\r",
+							"pm.globals.set(\"test_id\", undefined);\r",
+							"pm.globals.set('refresh_invalid', undefined);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{admin_access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "{{admin_fingerprint}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
